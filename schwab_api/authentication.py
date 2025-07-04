@@ -8,7 +8,8 @@ from . import urls
 import asyncio
 from playwright.async_api import async_playwright, TimeoutError
 # from playwright_stealth import stealth
-from playwright_stealth.stealth import stealth_async
+# from playwright_stealth.stealth import stealth_async
+from playwright_stealth.stealth import Stealth
 from requests.cookies import cookiejar_from_dict
 
 
@@ -24,6 +25,9 @@ class SessionManager:
         :type debug: boolean
         :param debug: Enable debug logging
         """
+        self.browserType = "firefox"  # you can also make this configurable
+        self.headless = True          # set to False if you want to see the browser
+
         self.headers = {}
         self.session = requests.Session()
         self.playwright = None
@@ -137,7 +141,9 @@ class SessionManager:
             viewport=VIEWPORT
         )
 
-        await stealth_async(self.page)
+        # await stealth_async(self.page)
+        stealth = Stealth()
+        await stealth.apply_stealth_async(self.page)
 
         await self.page.goto("https://www.schwab.com/")
         await self.page.route(re.compile(r".*balancespositions*"), self._asyncCaptureAuthToken)
