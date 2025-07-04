@@ -7,7 +7,8 @@ from . import urls
 
 import asyncio
 from playwright.async_api import async_playwright, TimeoutError
-from playwright_stealth import stealth
+# from playwright_stealth import stealth
+from playwright_stealth.stealth import stealth_async
 from requests.cookies import cookiejar_from_dict
 
 
@@ -136,7 +137,7 @@ class SessionManager:
             viewport=VIEWPORT
         )
 
-        await stealth(self.page)
+        await stealth_async(self.page)
 
         await self.page.goto("https://www.schwab.com/")
         await self.page.route(re.compile(r".*balancespositions*"), self._asyncCaptureAuthToken)
